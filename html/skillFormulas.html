@@ -1,0 +1,203 @@
+<!doctype html>
+<html ng-app="SkillsList">
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.0/angular-sanitize.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script type="text/javascript">
+        var skillList = angular.module('SkillsList', ['ui.bootstrap', 'ngSanitize'])
+        .controller('SkillListControl', function ($scope, $http) {
+			$scope.skills = []
+			$scope.currentPage=1
+			$scope.numPerPage=30
+			$scope.maxSize=5
+			$scope.rawSkills = []
+			
+			$scope.$watch("currentPage + numPerPage", function() {
+				var begin = (($scope.currentPage - 1) * $scope.numPerPage),
+				    end = begin + $scope.numPerPage;
+				$scope.skills = $scope.rawSkills.slice(begin, end);
+			})
+			
+			$scope.buildSkillList = function(skillTable) {
+				$scope.rawSkills = [];
+				for( v in skillTable) {
+					$scope.rawSkills.push(skillTable[v]);
+				}
+				$scope.skills = $scope.rawSkills.slice(0, $scope.numPerPage);
+			}
+			
+            $http.get('skilldata.json')
+                .then(function(res) {
+                    $scope.buildSkillList(res.data.skills);
+                    $scope.lines = res.data.lines;
+                });
+        })
+        .filter('info', function() {
+          return function(input, label, suffix) {
+            if(input == '' || input == 0) { return ''; }
+            return "<div class='info'><b>" + label + "</b> " + input + suffix + "</div>";
+          };
+        })
+        .filter('resource',function() {
+          return function(input, label, suffix) {
+            if(input == '' || input == 0) { return ''; }
+            switch(input) {
+                case 'Stamina':
+                    return '<span class="stam">Stamina</span>';
+                case 'Magicka':
+                    return '<span class="magk">Magicka</span>';
+                case 'Ultimate':
+                    return '<span class="ultm">Ultimate</span>';
+                case 'Health':
+                    return '<span class="health">Health</span>';
+                default:
+                    return input;
+            }
+          };
+        })
+        .filter('fID', function() {
+            return function(input) {
+                input = input || '';
+                return input.replace(/(##f[0-9]+##)/,'<span class="formulaID">$1</span>');
+            }
+        })
+        .filter('nl2br', function() {
+            return function(input) {
+                input = input || '';
+                return input.replace(/\n/,'<br />');
+            }
+        })
+		.directive("skill-desc", function() {
+			function sanitize(scope, element, attrs) {
+				element.html(attrs.skill-desc.replace(/\n/,'<br />'))
+			}
+			return {
+				transclude: true,
+				link: sanitize
+			};
+		})
+        ;
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+<style type="text/css">
+.skill {
+	background-color: #FEFEFE;
+	border: 1px solid #CCC;
+}
+.skill h2 {
+	display: inline-block;
+	font-size: 1.2em;
+	width: 375px;
+	margin: 5px 0px 10px 10px;
+	color:#06C;
+}
+
+.skill h3 {
+	font-size: 1em;
+	margin: 0px;
+	text-align: center;
+	color: #09F;
+}
+
+.skill div {
+	display: inline-block;
+}
+
+.skill .cost {
+	text-align: right;
+	width: 200px;
+}
+
+.skill .cost b {
+	font-size: 0.8em;
+}
+
+.skill .info {
+	width: 125px;
+	font-size: 0.8em;
+	margin: 0px 8px;
+}
+
+.skill p {
+	margin: 0px;
+	padding: 10px;
+	font-size: 0.95em;
+}
+
+.stam { color:#360; font-weight: bold; }
+.magk { color:#339; font-weight: bold; }
+.ultm { color:#666; font-weight: bold; }
+.health { color:#900; font-weight: bold; }
+
+.formulaID { color:#999; font-style:italic; }
+
+.formula { padding: 2px 10px; }
+.eqn { 
+	font-family: "Courier New", Courier, monospace;
+	display: inline-block;
+}
+
+.eqn .var {
+	font-weight: bold;
+}
+
+.eqn .coef {
+	color: #C60;
+}
+
+.rsq {
+	font-size: 0.8em;
+	margin-left: 15px;
+}
+
+.col {
+	width: 640px;
+	padding: 10px;
+	margin: 20px;
+	min-height: 400px;
+}
+
+pagination: { margin: auto }
+</style>
+</head>
+<body ng-controller="SkillListControl">
+    <h1>Skill data</h1>
+    <div class="col">
+    <div id="skill-list">
+    <pagination 
+      ng-model="currentPage"
+      total-items="rawSkills.length"
+      max-size="maxSize"  
+      boundary-links="true">
+    </pagination>
+        <div class="skill" ng-repeat="skill in skills">
+            <h2>{{skill.name}}</h2>
+            <div class="cost"><b>Base Cost:</b> {{skill.cost}} <span ng-bind-html="skill.mechanic | resource"></span></div>
+            
+            <p ng-bind-html="skill.description|nl2br|fID"></p>
+            <h3 ng-show="skill.fit.length>0">Formulas</h3>
+            <div class="formula" ng-repeat="(id,fit) in skill.fit">
+                <span class="formulaID">{{id}}</span><div class="eqn">= 
+                	<span class="coef">{{fit.mainCoef|number:6}}</span> &times; <span class="var">MainStat</span>
+                    + <span class="coef">{{fit.powerCoef|number:5}}</span> &times; <span class="var">Power</span></div>
+                	<span class="rsq rsq-good">R<sup>2</sup>: {{fit.rsq|number:4}}</span>
+            </div>
+        </div>
+    </div>
+    {{rawSkills.length}} items
+    <pagination 
+      ng-model="currentPage"
+      total-items="rawSkills.length"
+      max-size="maxSize"  
+      boundary-links="true">
+    </pagination>
+    </div>
+    
+    <div class="col">
+    
+    </div>
+</body>
+</html>
