@@ -1,0 +1,84 @@
+/* CSS Document */
+h1 {
+	text-align: center;
+}
+
+.skill {
+	background-color: #FEFEFE;
+	border: 1px solid #CCC;
+}
+.skill h2 {
+	display: inline-block;
+	font-size: 1.2em;
+	width: 375px;
+	margin: 5px 0px 10px 10px;
+	color:#06C;
+}
+
+.skill h3 {
+	font-size: 1em;
+	margin: 0px;
+	text-align: center;
+	color: #09F;
+}
+
+.skill div {
+	display: inline-block;
+}
+
+.skill .cost {
+	text-align: right;
+	width: 200px;
+}
+
+.skill .cost b {
+	font-size: 0.8em;
+}
+
+.skill .info {
+	width: 125px;
+	font-size: 0.8em;
+	margin: 0px 8px;
+}
+
+.skill p {
+	margin: 0px;
+	padding: 10px;
+	font-size: 0.95em;
+}
+
+.stam { color:#360; font-weight: bold; }
+.magk { color:#339; font-weight: bold; }
+.ultm { color:#666; font-weight: bold; }
+.health { color:#900; font-weight: bold; }
+
+.formulaID { color:#999; font-style:italic; }
+
+.formula { padding: 2px 10px; }
+.eqn { 
+	font-family: "Courier New", Courier, monospace;
+	display: inline-block;
+}
+
+.eqn .var {
+	font-weight: bold;
+}
+
+.eqn .coef {
+	color: #C60;
+}
+
+.rsq {
+	font-size: 0.8em;
+	margin-left: 15px;
+}
+
+.col {
+	width: 640px;
+	padding: 10px;
+	margin: 20px;
+	min-height: 400px;
+}
+
+div.paginateContain { text-align: center; }
+div.paginateContain .pagination { margin: 0px auto; }
