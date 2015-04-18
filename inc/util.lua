@@ -34,6 +34,6 @@ function u.makeDepth(t, list)
 end
 
 function u.makeKey(...)
-    return table.join({...},"/")
+    return table.concat({...},"/")
 end
 return u

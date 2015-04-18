@@ -20,24 +20,29 @@
 --- Required: Rserve must be ruu.nning for this script
 
 print("Loading libraries")
-local cfg = assert(loadfile("cfg.lua"))()
-local u = assert(loadfile("inc/util.lua"))()
-local sv = assert(loadfile("inc/loadfile.lua"))()
-local JSON = assert(loadfile "inc/JSON.lua")()
+local cfg = cfg or assert(loadfile("cfg.lua"))()
+local u = inc("util")
+local sv = inc("loadfile")
+local JSON = inc("JSON")
+local r = inc("extract")
 
 print("Account: " .. cfg.account)
 print("Server: " .. cfg.server)
 
 print("Loading saved variables")
 sv:loadSavedVariables(cfg.account, cfg.server)
-local r = assert(loadfile "inc/extract.lua")()
 
 local skilldata = sv:getSVEntry("SkillsCurve")
 local skillfull = sv:getSVEntry("SkillsFullInfo")
 local skillref = r:initSkillData(sv)
 
 print("Processing raw data into fit info")
-local outfile = {}
+
+local outfile = {
+    skills = {},
+    lines = {},
+}
+
 for skill_lvl,numbers in pairs(skilldata) do
     local skill = skill_lvl:gsub("..$","")
     local ref = skillref[skill]
@@ -72,7 +77,7 @@ for skill_lvl,numbers in pairs(skilldata) do
         local delta = 1E-5
         if fit.main < delta then fit.main = 0 end
         if fit.power < delta then fit.power = 0 end
-        if fit.health < delta then fit.health = 0 end
+        if (fit.health or 0) < delta then fit.health = 0 end
         if fit.int < delta then fit.int = 0 end
 
         local desc = skillInfo.description
@@ -86,7 +91,7 @@ for skill_lvl,numbers in pairs(skilldata) do
         else
             if not formulae[formulasig] then
                 formulae[formulasig] = "##f" .. formulaNum .. "##"
-                skillInfo.fit[formulasig] = {
+                skillInfo.fit[formulae[formulasig]] = {
                     mainCoef=fit.main,
                     powerCoef=fit.power,
                     healthCoef=fit.health,
@@ -100,7 +105,9 @@ for skill_lvl,numbers in pairs(skilldata) do
         end
     end
 
-    outfile[skill] = skillInfo
+    outfile.skills[skill] = skillInfo
+    u.makeDepth(outfile.lines, { ref.type, ref.line });
+    table.insert(outfile.lines[ref.type][ref.line], skill)
 end
 
 print("Writing results to: skilldata.json")

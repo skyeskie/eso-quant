@@ -15,6 +15,25 @@ local scripts = {
     { file = "scripts/skillNamesByLine.lua", desc = "Skill Names -> console" },
 }
 
+--Global include function
+function inc(file)
+    local f = assert(loadfile("inc/" .. file .. ".lua"))
+    return f()
+end
+
+local d = print
+function print(str)
+    d(str)
+    io.stdout:flush()
+end
+
+--TODO: Prompt user for this if cfg.lua not present
+cfg = assert(loadfile("cfg.lua"))()
+
+--Short-circuit for now
+dofile(scripts[3].file)
+os.exit(0)
+
 print("Selection function to run:")
 for i,desc in ipairs(scripts) do
     print("  " .. i .. ") " .. desc.desc)

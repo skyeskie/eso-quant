@@ -13,10 +13,10 @@ function T:getFitData(data)
     local health_array = {}
     local type = "Unknown"
     for k,v in pairs(data) do
-        local msu, primary, power, health = k:match("([MSU])([0-9.]+)P([0-9.]+)H?([0-9.]+)?")
+        local msu, primary, power, health = k:match("([MSU])([0-9.]+)P([0-9.]+)")--H?([0-9.]+)?
         table.insert(mainstat_array, tonumber(primary))
         table.insert(power_array, tonumber(power))
-        table.insert(health_array, tonumber(health) or 0)
+        table.insert(health_array, tonumber(0)) --health
         table.insert(value_array, tonumber(v))
         type = self.types[msu] or "Unknown"
     end
