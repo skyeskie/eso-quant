@@ -1,0 +1,13 @@
+## Title: Quant
+## Version: 0.3
+## Author: Sasky
+## APIVersion: 100011
+## SavedVariables: QuantData
+
+Quant.lua
+modules/StatsDump.lua
+modules/SkillDump.lua
+modules/SkillCurve.lua
+modules/ChampSys.lua
+modules/PowerRegister.lua
+modules/SetDump.lua

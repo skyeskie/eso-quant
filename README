@@ -1,0 +1,85 @@
+See LICENSE file for licensing information (GPLv2).
+For now, I'd prefer a limited distribution, the GPL doesn't prohibit posting elsewhere.
+I'll release myself eventually to ESOUI once it's cleaned up a bit more.
+
+I don't feel it's suitably portable enough for a wide install. Although it is tempting
+to try to hold this for limited DC use only, I'll release it... eventually.
+
+-----------------------------------------------------
+-- WARNINGS
+-----------------------------------------------------
+This addon uses a lot of lua memory to export data. Consider disabling other addons when running.
+As well, you'll want to delete/move the saved variables for this when you're done.
+
+Also, your game may appear to freeze while doing some of the commands. This is normal.
+A lot of the commands involve a lot of processing, and it's not really a priority to make the
+game run smoothly during them.
+
+Health data is not recorded yet. This will make some of the skill formulas wildly inaccurate.
+Pay close attention to the R squared value.
+
+-----------------------------------------------------
+-- INSTALLATION
+-----------------------------------------------------
+1) Install the addon in-game
+  a) Install Wykkyd's Outfitter (required for some modules)
+  b) Put into addon folder for game
+
+2) Install R (http://www.r-project.org/)
+  a) Install Rserve. Within the R cli, type the following command:
+    install.packages("Rserve")
+NOTE: Stand-alone Rserve can be used if desired for most functionality
+
+3) Install Scilua / LuaJIT
+  a) Follow the directions on http://www.scilua.org/get.html
+  b) Make sure to get the main Xsys library and the Rclient library.
+
+-----------------------------------------------------
+-- USAGE
+-----------------------------------------------------
+1) Addon in-game
+
+There are several different modules in-game. They're accessesd by slash commands and self-documenting.
+Type "/quant" in the chat box to see a list of commands and a brief description.
+
+Major modules:
+Champion system -- (cs and cs-desc) dumping champion system per-point data and descriptions
+Stats dump -- Exports character current character stats
+Skill dump -- Exports description and details about skills
+Skill curve -- Iterates through gear to record skill tooltip numbers at different stats
+Power register -- crude dumping of stamina/magicka changes to chatbox
+
+2) External Lua
+
+Several commands write out to the game's SavedVariables. A few of the scripts are designed to extract
+the data from the SavedVariables file and process it. These scripts are located in the ./scripts/ folder.
+
+NOTE: At this point you'll need to edit the stand-alone scripts to read from your account name within the
+saved variables file.
+
+Major scripts:
+DumpForR.lua - outputs data for a particular skill. This is in a format suitable for R's read.csv command.
+SkillFormulaDump.lua - outputs only skill formula coefficients with names.
+SkillDataExtract.lua - main script for curve fitting and skill detail dump. Outputs as tab-delimited
+SkillNamesByLine.lua - outputs a listing of skill names sorted by type and line
+
+Most output is in a tab-delimited file, suitable for Excel import.
+See the individual scripts for more details.
+
+-----------------------------------------------------
+-- CLEANUP
+-----------------------------------------------------
+DELETE Quant.lua when you are done with it
+
+-----------------------------------------------------
+-- EXTENSION
+-----------------------------------------------------
+See modules/Template.lua for a documented example of the framework.
+After adding a module, include its path in Quant.txt at the end.
+
+-----------------------------------------------------
+-- CHANGELOG
+-----------------------------------------------------
+0.3 - Begin limited release to Mostly Harmless and Wagonborn
+0.2 - Personal use (Skill iteration)
+0.1 - Personal use (Champ System)

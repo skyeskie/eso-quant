@@ -1,0 +1,76 @@
+<!doctype html>
+<html ng-app="SetsList">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        var setsList = angular.module('SetsList', [])
+        .controller('SetListCtrl', function ($scope, $http) {
+            $http.get('gearSets.json')
+                .then(function(res) {
+                    $scope.sets = res.data.sets;
+                    $scope.bonuses = res.data.bonuses;
+                });
+            $scope.getBonus = function(id) {
+                return $scope.bonuses[id-1].desc
+            }
+        })
+        .filter('stripcolor', function() {
+          return function(input) {
+            input = input || '';
+            return input.replace(/\|cffffff/g,"<b>").replace(/\|r/g,"</b>");
+          };
+        })
+        .filter('stripreq',function() {
+          return function(input) {
+            input = input || '';
+            return input.replace(/^\([^)]+\) /,"");
+          }
+        })
+        ;
+    </script>
+    <style type="text/css">
+        #set-list {
+            width: 800px;
+            margin: auto;
+            background-color: #EEE;
+        }
+        .set { margin: 5px; border-bottom: 1px solid #CCC; }
+        .set-bonuses {
+            padding: 0px;
+        }
+        .set-bonuses li {
+            display: inline-block;
+            width: 33%;
+            padding: 3px 0px;
+            margin: 0px;
+        }
+        .set .set-bonuses li:last-child {
+            display: block;
+            width: 100%;
+            border-top: 1px solid #DDD;
+            text-align: center;
+        }
+        .set-name {
+            size: 1.3em;
+            font-weight: bold;
+            margin: 10px 0px 0px 30px;
+        }
+    </style>
+</head>
+<body ng-controller="SetListCtrl">
+<div id="filters">
+    <div>Name: <input ng-model="query.name" /></div>
+    <div>Bonus 1: <input ng-model="query.bonuses[1]" /></div>
+
+</div>
+<div id="set-list">
+    <div class="set" ng-repeat="set in sets | filter:query">
+        <div class="set-name">{{set.name}}</div>
+        <ul class="set-bonuses">
+            <li ng-repeat="bonus in set.bonuses">{{bonus.n}} : {{getBonus(bonus.id)|stripcolor|stripreq}}</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+-- Output files
+*.csv
+*.dat
+*.json
+*.zip
+
+-- IntelliJ structure
+.idea
+Quant.iml
