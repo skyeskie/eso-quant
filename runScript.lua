@@ -17,7 +17,7 @@ local scripts = {
 
 --Global include function
 function inc(file)
-    local f = assert(loadfile("inc/" .. file .. ".lua"))
+    local f = assert(loadfile("scripts/inc/" .. file .. ".lua"))
     return f()
 end
 
@@ -29,10 +29,6 @@ end
 
 --TODO: Prompt user for this if cfg.lua not present
 cfg = assert(loadfile("cfg.lua"))()
-
---Short-circuit for now
-dofile(scripts[3].file)
-os.exit(0)
 
 print("Selection function to run:")
 for i,desc in ipairs(scripts) do

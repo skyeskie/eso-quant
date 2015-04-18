@@ -17,11 +17,10 @@
 
 --- Used to extract set data into JSON format
 print("Loading libraries")
-local cfg = assert(loadfile("cfg.lua"))()
-local u = assert(loadfile("inc/util.lua"))()
-local sv = assert(loadfile("inc/loadfile.lua"))()
-JSON = assert(loadfile "inc/JSON.lua")()
-cfg.server = "live"
+local cfg = cfg or assert(loadfile("cfg.lua"))()
+local u = inc("util")
+local sv = inc("loadfile")
+local JSON = inc("JSON")
 print("Account: " .. cfg.account)
 print("Server: " .. cfg.server)
 
