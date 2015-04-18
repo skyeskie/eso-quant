@@ -1,0 +1,172 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on https://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>Quant</title>
+  <meta name="description" content="Data analysis for ESO">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">Quant</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Data analysis for ESO</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/s42ky/eso-quant/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/s42ky/eso-quant/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/s42ky/eso-quant" class="code">View Quant on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <p>This addon contains a collection of tools for getting data from Elder Scrolls Online.
+It's a combination of in-game addon modules, external scripts, and some HTML for viewing the data
+afterwords.</p>
+
+<h1>
+<a id="warnings" class="anchor" href="#warnings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Warnings</h1>
+
+<p>This is not an easy setup. I've made it as easy as possible, but there are a lot of moving parts.
+Furthermore, you still have to do a lot of the work afterwords.</p>
+
+<p>This addon can use a lot of lua memory to export data. Consider disabling other addons when running.
+As well, you'll want to delete/move the saved variables for this when you're done.</p>
+
+<p>Also, your game may appear to freeze while doing some of the commands. This is normal.
+A lot of the commands involve a lot of processing, and it's not really a priority to make the
+game run smoothly during them.</p>
+
+<p>Health data is not recorded yet. This will make some of the skill formulas wildly inaccurate.
+Pay close attention to the R squared value.</p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<p>1) Install the addon in-game
+  a) Install Wykkyd's Outfitter (required for some modules)
+  b) Put into addon folder for game</p>
+
+<p>2) Install R (<a href="http://www.r-project.org/">http://www.r-project.org/</a>)
+  a) Install Rserve. Within the R cli, type the following command:
+    <code>install.packages("Rserve")</code>
+NOTE: Stand-alone Rserve can be used if desired for most functionality</p>
+
+<p>3) Install Scilua / LuaJIT
+  a) Follow the directions on <a href="http://www.scilua.org/get.html">http://www.scilua.org/get.html</a>
+  b) Make sure to get the main Xsys library and the Rclient library.</p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<h2>
+<a id="addon-in-game" class="anchor" href="#addon-in-game" aria-hidden="true"><span class="octicon octicon-link"></span></a>Addon in-game</h2>
+
+<p>There are several different modules in-game. They're accessesd by slash commands and self-documenting.
+Type <code>/quant</code> in the chat box to see a list of commands and a brief description.</p>
+
+<h3>
+<a id="major-modules" class="anchor" href="#major-modules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Major modules:</h3>
+
+<ul>
+<li>Champion system -- (<code>cs</code> and <code>cs-desc</code>) dumping champion system per-point data and descriptions</li>
+<li>Stats dump -- Exports character current character stats</li>
+<li>Skill dump -- Exports description and details about skills</li>
+<li>Skill curve -- Iterates through gear to record skill tooltip numbers at different stats*</li>
+<li>Sets dump -- Exports a dump of all set info</li>
+<li>Power register -- crude dumping of stamina/magicka changes to chatbox</li>
+</ul>
+
+<h2>
+<a id="external-lua" class="anchor" href="#external-lua" aria-hidden="true"><span class="octicon octicon-link"></span></a>External Lua</h2>
+
+<p>Several commands write out to the game's <code>SavedVariables</code>. A few of the scripts are designed to extract
+the data from the <code>SavedVariables</code> file and process it.</p>
+
+<p>First you need to setup the <code>cfg.lua</code> in the root directory. If you don't, the scripts won't find your
+saved variables.</p>
+
+<p>To access, run the <code>runScripts.lua</code> file in the base directory. Files will be output in that same directory.
+There's a brief summary, buts see the individual scripts for more details.</p>
+
+<h2>
+<a id="html" class="anchor" href="#html" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTML</h2>
+
+<p>I've started working on some HTML for displaying. After exporting the data to JSON, move the JSON into the
+same folder as the HTML. You can then open the HTML in Firefox. </p>
+
+<p>Note: Unless you actually host it on a site (or some complicated workarounds), Chrome will not load local
+files.</p>
+
+<hr>
+
+<h1>
+<a id="cleanup" class="anchor" href="#cleanup" aria-hidden="true"><span class="octicon octicon-link"></span></a>Cleanup</h1>
+
+<p>Delete <code>Quant.lua</code> from your SavedVariables directory when you are done with it</p>
+
+<h1>
+<a id="extension" class="anchor" href="#extension" aria-hidden="true"><span class="octicon octicon-link"></span></a>Extension</h1>
+
+<p>In-game</p>
+
+<ul>
+<li>See <code>modules/Template.lua</code> for a documented example of the framework.</li>
+<li>After adding a module, include its path in <code>Quant.txt</code> at the end.</li>
+</ul>
+
+<p>External</p>
+
+<ul>
+<li>There are several convenience functions in <code>scripts/inc</code> to help out</li>
+<li>Consider adding to the <code>runScript.lua</code> to make it easier to access</li>
+</ul>
+
+<h1>
+<a id="changelog" class="anchor" href="#changelog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Changelog</h1>
+
+<ul>
+<li>0.4 - Add sets, initialize Git</li>
+<li>0.3 - Begin limited release to Mostly Harmless and Wagonborn</li>
+<li>0.2 - Personal use (Skill iteration)</li>
+<li>0.1 - Personal use (Champ System)</li>
+</ul>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/s42ky" class="avatar"><img src="https://avatars0.githubusercontent.com/u/1550555?v=3&amp;s=60" width="48" height="48"></a> <a href="https://github.com/s42ky">s42ky</a> maintains <a href="https://github.com/s42ky/eso-quant">Quant</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br>theme by <a href="https://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/s42ky/eso-quant/tarball/master" class="tar">tar</a><a href="https://github.com/s42ky/eso-quant/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
