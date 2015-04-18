@@ -1,14 +1,12 @@
-See LICENSE file for licensing information (GPLv2).
-For now, I'd prefer a limited distribution, the GPL doesn't prohibit posting elsewhere.
-I'll release myself eventually to ESOUI once it's cleaned up a bit more.
+This addon contains a collection of tools for getting data from Elder Scrolls Online.
+It's a combination of in-game addon modules, external scripts, and some HTML for viewing the data
+afterwords.
 
-I don't feel it's suitably portable enough for a wide install. Although it is tempting
-to try to hold this for limited DC use only, I'll release it... eventually.
+# Warnings
+This is not an easy setup. I've made it as easy as possible, but there are a lot of moving parts.
+Furthermore, you still have to do a lot of the work afterwords.
 
------------------------------------------------------
--- WARNINGS
------------------------------------------------------
-This addon uses a lot of lua memory to export data. Consider disabling other addons when running.
+This addon can use a lot of lua memory to export data. Consider disabling other addons when running.
 As well, you'll want to delete/move the saved variables for this when you're done.
 
 Also, your game may appear to freeze while doing some of the commands. This is normal.
@@ -18,68 +16,68 @@ game run smoothly during them.
 Health data is not recorded yet. This will make some of the skill formulas wildly inaccurate.
 Pay close attention to the R squared value.
 
------------------------------------------------------
--- INSTALLATION
------------------------------------------------------
+# Installation
 1) Install the addon in-game
   a) Install Wykkyd's Outfitter (required for some modules)
   b) Put into addon folder for game
 
 2) Install R (http://www.r-project.org/)
   a) Install Rserve. Within the R cli, type the following command:
-    install.packages("Rserve")
+    `install.packages("Rserve")`
 NOTE: Stand-alone Rserve can be used if desired for most functionality
 
 3) Install Scilua / LuaJIT
   a) Follow the directions on http://www.scilua.org/get.html
   b) Make sure to get the main Xsys library and the Rclient library.
 
------------------------------------------------------
--- USAGE
------------------------------------------------------
-1) Addon in-game
+# Usage
+## Addon in-game
 
 There are several different modules in-game. They're accessesd by slash commands and self-documenting.
-Type "/quant" in the chat box to see a list of commands and a brief description.
+Type `/quant` in the chat box to see a list of commands and a brief description.
 
-Major modules:
-Champion system -- (cs and cs-desc) dumping champion system per-point data and descriptions
-Stats dump -- Exports character current character stats
-Skill dump -- Exports description and details about skills
-Skill curve -- Iterates through gear to record skill tooltip numbers at different stats
-Power register -- crude dumping of stamina/magicka changes to chatbox
+### Major modules:
+* Champion system -- (`cs` and `cs-desc`) dumping champion system per-point data and descriptions
+* Stats dump -- Exports character current character stats
+* Skill dump -- Exports description and details about skills
+* Skill curve -- Iterates through gear to record skill tooltip numbers at different stats*
+* Sets dump -- Exports a dump of all set info
+* Power register -- crude dumping of stamina/magicka changes to chatbox
 
-2) External Lua
+## External Lua
 
-Several commands write out to the game's SavedVariables. A few of the scripts are designed to extract
-the data from the SavedVariables file and process it. These scripts are located in the ./scripts/ folder.
+Several commands write out to the game's `SavedVariables`. A few of the scripts are designed to extract
+the data from the `SavedVariables` file and process it.
 
-NOTE: At this point you'll need to edit the stand-alone scripts to read from your account name within the
-saved variables file.
+First you need to setup the `cfg.lua` in the root directory. If you don't, the scripts won't find your
+saved variables.
 
-Major scripts:
-DumpForR.lua - outputs data for a particular skill. This is in a format suitable for R's read.csv command.
-SkillFormulaDump.lua - outputs only skill formula coefficients with names.
-SkillDataExtract.lua - main script for curve fitting and skill detail dump. Outputs as tab-delimited
-SkillNamesByLine.lua - outputs a listing of skill names sorted by type and line
+To access, run the `runScripts.lua` file in the base directory. Files will be output in that same directory.
+There's a brief summary, buts see the individual scripts for more details.
 
-Most output is in a tab-delimited file, suitable for Excel import.
-See the individual scripts for more details.
+## HTML
+I've started working on some HTML for displaying. After exporting the data to JSON, move the JSON into the
+same folder as the HTML. You can then open the HTML in Firefox. 
 
------------------------------------------------------
--- CLEANUP
------------------------------------------------------
-DELETE Quant.lua when you are done with it
+Note: Unless you actually host it on a site (or some complicated workarounds), Chrome will not load local
+files.
 
 -----------------------------------------------------
--- EXTENSION
------------------------------------------------------
-See modules/Template.lua for a documented example of the framework.
-After adding a module, include its path in Quant.txt at the end.
+# Cleanup
+Delete `Quant.lua` from your SavedVariables directory when you are done with it
 
------------------------------------------------------
--- CHANGELOG
------------------------------------------------------
+# Extension
+In-game
+* See `modules/Template.lua` for a documented example of the framework.
+* After adding a module, include its path in `Quant.txt` at the end.
+
+External
+* There are several convenience functions in `scripts/inc` to help out
+* Consider adding to the `runScript.lua` to make it easier to access
+
+# Changelog
+0.4 - Add sets, initialize Git
 0.3 - Begin limited release to Mostly Harmless and Wagonborn
 0.2 - Personal use (Skill iteration)
 0.1 - Personal use (Champ System)
+
