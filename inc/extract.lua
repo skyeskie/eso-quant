@@ -73,7 +73,7 @@ end
 function T:initSkillData(sv)
     if self.skillref then return self.skillref end
     self.skillref = {}
-    local skillfull = sv.getSVEntry("SkillsFullInfo")
+    local skillfull = sv:getSVEntry("SkillsFullInfo")
     for type,lines in pairs(skillfull) do
         for line,skills in pairs(lines) do
             for skill in pairs(skills) do
