@@ -1,11 +1,11 @@
 --Main fit find function
-R = require "rclient"
-r = R.connect()
+local R = require "rclient"
+local r = R.connect()
 
-require "loadfile"
+local T = {}
+T.types = { M="Magicka", S="Stamina", U="Ulitmate"}
+function T:getFitData(data)
 
-types = { M="Magicka", S="Stamina", U="Ulitmate"}
-function getFitData(data)
     --Construct arrays from data
     local mainstat_array = {}
     local power_array = {}
@@ -13,12 +13,12 @@ function getFitData(data)
     local health_array = {}
     local type = "Unknown"
     for k,v in pairs(data) do
-        local msu, primary, power, health = k:match("([MSU])([0-9.]+)P([0-9.]+)H([0-9.]+)")
+        local msu, primary, power, health = k:match("([MSU])([0-9.]+)P([0-9.]+)H?([0-9.]+)?")
         table.insert(mainstat_array, tonumber(primary))
         table.insert(power_array, tonumber(power))
-        table.insert(health_array, tonumber(health))
+        table.insert(health_array, tonumber(health) or 0)
         table.insert(value_array, tonumber(v))
-        type = types[msu] or "Unknown"
+        type = self.types[msu] or "Unknown"
     end
 
     --Import data to R
@@ -35,7 +35,7 @@ function getFitData(data)
             power=0,
             int=value_array[1],
             rsq=1,
-            const=true
+            const=true,
         }
     else
         --Get linear fit
@@ -53,12 +53,13 @@ function getFitData(data)
             health=coef.Health,
             int=coef["(Intercept)"],
             rsq=rsq[1],
-            const=false
+            const=false,
+            type=type,
         }
     end
 end
 
-function replaceNumberInDescription(str, needle, formulaSig)
+function T:replaceNumberInDescription(str, needle, formulaSig)
     local check,f = str:find(needle)
     if check==nil then return str end
     local first = str:sub(1,f)
@@ -69,13 +70,18 @@ function replaceNumberInDescription(str, needle, formulaSig)
     return first:gsub(needle, formulaSig) .. last
 end
 
-skillref = {}
-local sv = require("inc.loadfile")
-local skillfull = sv.getSVEntry("SkillsFullInfo")
-for type,lines in pairs(skillfull) do
-    for line,skills in pairs(lines) do
-        for skill in pairs(skills) do
-            skillref[skill] = { type=type, line=line }
+function T:initSkillData(sv)
+    if self.skillref then return self.skillref end
+    self.skillref = {}
+    local skillfull = sv.getSVEntry("SkillsFullInfo")
+    for type,lines in pairs(skillfull) do
+        for line,skills in pairs(lines) do
+            for skill in pairs(skills) do
+                self.skillref[skill] = { type=type, line=line }
+            end
         end
     end
+    return self.skillref
 end
+
+return T

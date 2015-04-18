@@ -20,4 +20,20 @@ function u.getMechanicName(mechanic)
     elseif mechanic == 10 then return "Ultimate"
     else return "Unknown: " .. nn(mechanic) end
 end
+
+function u.makeDepth(t, list)
+    if not t then return end
+
+    local ptr = t;
+    for _,v in ipairs(list) do
+        if not ptr[v] then
+            ptr[v] = {}
+        end
+        ptr = ptr[v]
+    end
+end
+
+function u.makeKey(...)
+    return table.join({...},"/")
+end
 return u
