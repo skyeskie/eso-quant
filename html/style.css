@@ -1,4 +1,8 @@
 /* CSS Document */
+body {
+	height: 100%;
+}
+
 h1 {
 	text-align: center;
 }
@@ -10,9 +14,10 @@ h1 {
 .skill h2 {
 	display: inline-block;
 	font-size: 1.2em;
-	width: 375px;
+	width: 60%;
 	margin: 5px 0px 10px 10px;
 	color:#06C;
+	font-weight: bold;
 }
 
 .skill h3 {
@@ -28,7 +33,7 @@ h1 {
 
 .skill .cost {
 	text-align: right;
-	width: 200px;
+	width: 35%;
 }
 
 .skill .cost b {
@@ -36,14 +41,15 @@ h1 {
 }
 
 .skill .info {
-	width: 125px;
-	font-size: 0.8em;
+	display: inline-block;
+	font-size: 0.9em;
 	margin: 0px 8px;
 }
 
-.skill p {
+.skill p, .skill skill-desc {
 	margin: 0px;
 	padding: 10px;
+	display: block;
 	font-size: 0.95em;
 }
 
@@ -52,11 +58,22 @@ h1 {
 .ultm { color:#666; font-weight: bold; }
 .health { color:#900; font-weight: bold; }
 
+.dmg-flame { background-color:#900 }
+.dmg-ice { background-color:#09F }
+.dmg-lightning, .dmg-shock { background-color:#609 }
+.dmg-poison { background-color:#360 }
+.dmg-disease { background-color:#960 }
+.dmg-physical { background-color:#C60 }
+.dmg-magic { background-color:#099 }
+.dmg-heal { background-color:#CC3 }
+
 .formulaID { color:#999; font-style:italic; }
 
 .formula { padding: 2px 10px; }
 .eqn { 
 	font-family: "Courier New", Courier, monospace;
+	font-size: 0.85em;
+	text-align: center;
 	display: inline-block;
 }
 
