@@ -63,7 +63,7 @@ function CS:getCPDescriptions(level)
         out[constellation] = {}
         for j = 1, 8 do --Grab passives too
             local skill = GetChampionSkillName(i,j)
-            out[constellation][skill].description = GetChampionAbilityDescription(GetChampionAbilityId(i, j), level)
+            out[constellation][skill] = GetChampionAbilityDescription(GetChampionAbilityId(i, j), level)
         end
     end
     return out
