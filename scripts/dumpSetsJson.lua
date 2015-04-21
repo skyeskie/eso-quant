@@ -42,7 +42,6 @@ local function addItemToSet(item)
 end
 
 local f = assert(io.open("gearSets.json", "w"))
-local i=1
 for _,item in pairs(setdata.items) do
     addItemToSet(item)
 end

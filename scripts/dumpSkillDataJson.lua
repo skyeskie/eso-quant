@@ -46,68 +46,72 @@ local outfile = {
 for skill_lvl,numbers in pairs(skilldata) do
     local skill = skill_lvl:gsub("..$","")
     local ref = skillref[skill]
-    local data = skillfull[ref.type][ref.line][skill]
+    if ref then
+        local data = skillfull[ref.type][ref.line][skill]
 
-    local skillInfo = {
-        name=skill,
-        type=ref.type,
-        line=ref.line,
-        rank=data.rank or 4, --Hardcoding rank 4, though possible want different ranks later
-        description=data.description,
-        descriptionHeader=data.descriptionHeader,
-        mechanic=u.getMechanicName(data.mechanic),
-        cost=data.cost,
-        target=data.targetDescription,
-        minRange=data.minRangeCM,
-        maxRange=data.maxRangeCM,
-        radius=data.radiusCM,
-        distance=data.distanceCM,
-        channeled=data.channeled,
-        castTime=data.castTime,
-        channelTime=data.channelTime,
-        durationMS=data.durationMS,
-    }
+        local skillInfo = {
+            name=skill,
+            type=ref.type,
+            line=ref.line,
+            rank=data.rank or 4, --Hardcoding rank 4, though possible want different ranks later
+            description=data.description,
+            descriptionHeader=data.descriptionHeader,
+            mechanic=u.getMechanicName(data.mechanic),
+            cost=data.cost,
+            target=data.targetDescription,
+            minRange=data.minRangeCM,
+            maxRange=data.maxRangeCM,
+            radius=data.radiusCM,
+            distance=data.distanceCM,
+            channeled=data.channeled,
+            castTime=data.castTime,
+            channelTime=data.channelTime,
+            durationMS=data.durationMS,
+        }
 
-    local lastFindPos = 1
-    local formulaNum = 1
-    local formulae = {}
-    skillInfo.fit = {}
-    for _,rawnumbers in ipairs(numbers) do
-        local fit = r:getFitData(rawnumbers)
-        local delta = 1E-5
-        if fit.main < delta then fit.main = 0 end
-        if fit.power < delta then fit.power = 0 end
-        if (fit.health or 0) < delta then fit.health = 0 end
-        if fit.int < delta then fit.int = 0 end
+        local lastFindPos = 1
+        local formulaNum = 1
+        local formulae = {}
+        skillInfo.fit = {}
+        for _,rawnumbers in ipairs(numbers) do
+            local fit = r:getFitData(rawnumbers)
+            local delta = 1E-5
+            if fit.main < delta then fit.main = 0 end
+            if fit.power < delta then fit.power = 0 end
+            if (fit.health or 0) < delta then fit.health = 0 end
+            if fit.int < delta then fit.int = 0 end
 
-        local desc = skillInfo.description
-        local start = desc:find("|c")
-        local _,fin = desc:find("|r")
-        local toReplace = desc:sub(start,fin)
+            local desc = skillInfo.description
+            local start = desc:find("|c")
+            local _,fin = desc:find("|r")
+            local toReplace = desc:sub(start,fin)
 
-        local formulasig = u.makeKey(fit.main, fit.power, fit.health, fit.int, fit.rsq)
-        if fit.const then
-            skillInfo.description = r:replaceNumberInDescription(desc, toReplace, fit.int)
-        else
-            if not formulae[formulasig] then
-                formulae[formulasig] = "##f" .. formulaNum .. "##"
-                skillInfo.fit[formulae[formulasig]] = {
-                    mainCoef=fit.main,
-                    powerCoef=fit.power,
-                    healthCoef=fit.health,
-                    intercept=fit.int,
-                    rsq=fit.rsq,
-                }
-                formulaNum = formulaNum + 1
+            local formulasig = u.makeKey(fit.main, fit.power, fit.health, fit.int, fit.rsq)
+            if fit.const then
+                skillInfo.description = r:replaceNumberInDescription(desc, toReplace, fit.int)
+            else
+                if not formulae[formulasig] then
+                    formulae[formulasig] = "##f" .. formulaNum .. "##"
+                    skillInfo.fit[formulae[formulasig]] = {
+                        mainCoef=fit.main,
+                        powerCoef=fit.power,
+                        healthCoef=fit.health,
+                        intercept=fit.int,
+                        rsq=fit.rsq,
+                    }
+                    formulaNum = formulaNum + 1
+                end
+
+                skillInfo.description = r:replaceNumberInDescription(desc, toReplace, formulae[formulasig])
             end
-
-            skillInfo.description = r:replaceNumberInDescription(desc, toReplace, formulae[formulasig])
         end
-    end
 
-    outfile.skills[skill] = skillInfo
-    u.makeDepth(outfile.lines, { ref.type, ref.line });
-    table.insert(outfile.lines[ref.type][ref.line], skill)
+        outfile.skills[skill] = skillInfo
+        u.makeDepth(outfile.lines, { ref.type, ref.line });
+        table.insert(outfile.lines[ref.type][ref.line], skill)
+    else
+        print("No lookup found for: " .. skill)
+    end
 end
 
 print("Writing results to: skilldata.json")

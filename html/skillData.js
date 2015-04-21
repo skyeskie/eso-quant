@@ -140,6 +140,18 @@ SkillData.directive('skillDesc', function() {
 		}
 	};
 });
+
+SkillData.directive('formulaPart', function() {
+  return {
+	  restrict: 'E',
+	  scope: {
+		  label: '@',
+		  value: '@'
+	  },
+	  template: '<span ng-show="{{value > 0.0001}}"><span class="coef">{{value}}</span> &times; <span class="var">{{label}}</span> +</span>'
+  }
+})
+
 SkillData.directive("rsq", function() {
 	return {
 		scope: {

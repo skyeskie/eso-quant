@@ -53,8 +53,10 @@
             <h3 ng-show="{{skill.fit.length}} > 0">Formulas</h3>
             <div class="formula" ng-repeat="(id,fit) in skill.fit">
                 <span class="formulaID">{{id}}</span><div class="eqn">= 
-                	<span class="coef">{{fit.mainCoef|number:6}}</span> &times; <span class="var">MainStat</span>
-                    + <span class="coef">{{fit.powerCoef|number:5}}</span> &times; <span class="var">Power</span></div>
+                	<formula-part value="{{fit.mainCoef|number:4}}" label="MainStat"></formula-part>
+                	<formula-part value="{{fit.healthCoef|number:4}}" label="Health"></formula-part>
+                	<formula-part value="{{fit.powerCoef|number:5}}" label="Power"></formula-part>
+                    <span class="coef">{{fit.intercept|number:2}}</span>
                 	<span class="rsq label {{fit.rsq|fitQualityClass}}">R<sup>2</sup>: {{fit.rsq|number:4}}</span>
             </div>
         </div>
