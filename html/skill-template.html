@@ -1,0 +1,25 @@
+<div ng-show="skill.name.length == 0" class="skillDrop">
+	Drag skill here
+</div>
+<div ng-show="skill.name.length > 0" lvl-draggable='true' data-skill="{{skill.name}}" class="skill">
+	<h2>{{skill.name}}</h2>
+	<div class="cost"><b>Base Cost:</b> {{skill.cost}} <span ng-bind-html="skill.mechanic | resource"></span></div>
+	<div class="info" ng-show="{{skill.castTime==0 && skill.channelTime==0}}" suffix=""><b>Cast:</b> Instant</div>
+	<skill-info label="Cast" value="{{skill.castTime | divide:1000}}" suffix="sec"></skill-info>
+	<skill-info label="Channel" value="{{skill.channelTime | divide:1000}}" suffix="sec"></skill-info>
+	<skill-info label="Duration" value="{{skill.durationMS | divide:1000}}" suffix="sec"></skill-info>
+	<skill-info label="Distance" value="{{skill.distance | divide:100}}" suffix="m"></skill-info>
+	<skill-info label="Range" value="{{skill.maxRange | divide:100}}" suffix="m"></skill-info>
+	<skill-info label="Radius" value="{{skill.radius | divide:100}}" suffix="m"></skill-info>
+	<skill-desc value="description"></skill-desc>
+	<div class="formula" ng-repeat="(id,fit) in skill.fit">
+		<span class="formulaID">{{id}}</span>
+		<span class="rsq label {{fit.rsq|fitQualityClass}}">R<sup>2</sup>: {{fit.rsq|number:4}}</span>
+		<div class="eqn">
+			= <formula-part value="{{fit.mainCoef|number:4}}" label="MainStat"></formula-part>
+			<formula-part value="{{fit.healthCoef|number:4}}" label="Health"></formula-part>
+			<formula-part value="{{fit.powerCoef|number:5}}" label="Power"></formula-part>
+			<span class="coef">{{fit.intercept|number:2}}</span>
+		</div>
+	</div>
+</div>

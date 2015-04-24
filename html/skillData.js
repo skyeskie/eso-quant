@@ -1,4 +1,4 @@
-var SkillData = angular.module('SkillsList', ['ui.bootstrap', 'ngSanitize', 'angularBootstrapNavTree']);
+var SkillData = angular.module('SkillsList', ['ui.bootstrap', 'ngSanitize', 'angularBootstrapNavTree', 'lvl.directives.dragdrop']);
 SkillData.controller('SkillMainDataController', ['$scope', '$http', function ($scope, $http) {
 	$scope.skills = []
 	$scope.rawSkills = []
@@ -17,7 +17,7 @@ SkillData.controller('SkillMainDataController', ['$scope', '$http', function ($s
 	$scope.setSkills = function() {
 		$scope.skillNames = this.data.skills
 	}
-	
+
 	$http.get('skilldata.json')
 		.then(function(res) {
 			$scope.buildSkillList(res.data.skills);
@@ -74,7 +74,37 @@ SkillData.controller('SkillLineController', ['$scope', function ($scope) {
 	}
 }]);
 SkillData.controller('LoadoutController', ['$scope', function ($scope) {
-	
+	$scope.emptySkill = {
+		name: "",
+		description: "",
+		cost: 0,
+		target: "",
+		mechanic: "",
+		castTime: 0,
+		channelTime: 0,
+		durationMS: 0,
+		distance: 0,
+		maxRange: 0,
+		radius: 0,
+		fit: []
+	}
+	$scope.skills = []
+	$scope.updaters = []
+	for(var i=0; i<12; ++i) {
+		$scope.skills[i] = angular.copy($scope.emptySkill)
+	}
+	$scope.dropped = function(dragID, index, dropID) {
+	  index = Number(index)
+	  var drag = angular.element(document.getElementById(dragID));
+	  var targetSkill = $scope.skills[index]
+	  angular.copy($scope.rawSkillData[drag.attr("data-skill")], targetSkill)
+	  $scope.$apply()
+	  //var scope = document.getElementById(dropID).getElementsByTagName("skill-info-full")[0].scope()
+	  //angular.copy($scope.rawSkillData[drag.text()], scope.skill)
+    };
+	$scope.defined = function(v) {
+		return v.name != ""
+	}
 }]);
 SkillData.filter('fitQualityClass', function() {
   return function(input) {
@@ -125,20 +155,36 @@ SkillData.filter('nl2br', function() {
 SkillData.directive('skillDesc', function() {
 	return {
 		restrict: 'E',
-		scope: true,
-		link: function(scope, element, attrs) {
-			var desc = scope.skill.description.replace(/\n/g,'<br />')
-			desc = desc.replace(/Flame Damage/g, '<span class="label dmg-flame">Flame Damage</span>')
-			desc = desc.replace(/Magic Damage/g, '<span class="label dmg-magic">Magic Damage</span>')
-			desc = desc.replace(/Ice Damage/g, '<span class="label dmg-ice">Ice Damage</span>')
-			desc = desc.replace(/Cold Damage/g, '<span class="label dmg-ice">Cold Damage</span>')
-			desc = desc.replace(/Shock Damage/g, '<span class="label dmg-shock">Shock Damage</span>')
-			desc = desc.replace(/Poison Damage/g, '<span class="label dmg-poison">Poison Damage</span>')
-			desc = desc.replace(/Disease Damage/g, '<span class="label dmg-disease">Disease Damage</span>')
-			desc = desc.replace(/Physical Damage/g, '<span class="label dmg-physical">Physical Damage</span>')
-			element.html(desc.replace(/(##f[0-9]+##)/g,'<span class="formulaID">$1</span>'))
+		controller: function($scope, $element) {
+			$scope.$watch("skill.description", function(newVal) {
+				var desc = newVal
+				desc = desc.replace(/\n/g,'<br />')
+				desc = desc.replace(/(##f[0-9]+##)/g,'<span class="formulaID">$1</span>');
+				desc = desc.replace(/Flame Damage/g, '<span class="label dmg-flame">Flame Damage</span>')
+				desc = desc.replace(/Magic Damage/g, '<span class="label dmg-magic">Magic Damage</span>')
+				desc = desc.replace(/Ice Damage/g, '<span class="label dmg-ice">Ice Damage</span>')
+				desc = desc.replace(/Cold Damage/g, '<span class="label dmg-ice">Cold Damage</span>')
+				desc = desc.replace(/Shock Damage/g, '<span class="label dmg-shock">Shock Damage</span>')
+				desc = desc.replace(/Poison Damage/g, '<span class="label dmg-poison">Poison Damage</span>')
+				desc = desc.replace(/Disease Damage/g, '<span class="label dmg-disease">Disease Damage</span>')
+				desc = desc.replace(/Physical Damage/g, '<span class="label dmg-physical">Physical Damage</span>')
+				$element.html(desc)
+			})
 		}
 	};
+});
+
+SkillData.directive('skillFull', function() {
+	return {
+		restrict: 'E',
+		scope: {
+			skill: '=info'
+		},
+		templateUrl: 'skill-template.html',
+		link: function(scope) {
+			scope.description = scope.skill.description
+		}
+	}
 });
 
 SkillData.directive('formulaPart', function() {
@@ -169,6 +215,6 @@ SkillData.directive('skillInfo', function() {
 		  value: '@',
 		  suffix: '@'
 	  },
-	  template: '<div class="info" ng-show="{{value}} > 0"><b>{{label}}:</b> {{value}}{{suffix}}</div>'
+	  template: '<div class="info" ng-show="value > 0"><b>{{label}}:</b> {{value}}{{suffix}}</div>'
   }
 })

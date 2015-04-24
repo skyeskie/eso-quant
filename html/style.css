@@ -53,6 +53,16 @@ h1 {
 	font-size: 0.95em;
 }
 
+.skillDrop {
+	border: 1px #777 dashed;
+	background-color:#EEE;
+	padding: 0.5em;
+	margin: 10px 0px;
+	text-align: center;
+	vertical-align: middle;
+	color: #777;
+}
+
 .stam { color:#360; font-weight: bold; }
 .magk { color:#339; font-weight: bold; }
 .ultm { color:#666; font-weight: bold; }
@@ -67,7 +77,7 @@ h1 {
 .dmg-magic { background-color:#099 }
 .dmg-heal { background-color:#CC3 }
 
-.formulaID { color:#999; font-style:italic; }
+.formulaID { color:#F60; font-style:italic; }
 
 .formula { padding: 2px 10px; }
 .eqn { 
@@ -99,3 +109,11 @@ h1 {
 
 div.paginateContain { text-align: center; }
 div.paginateContain .pagination { margin: 0px auto; }
+
+[draggable] {
+	cursor: move;
+}
+
+#loadout .skill .info {
+	display: none;
+}

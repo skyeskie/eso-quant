@@ -1,0 +1,113 @@
+<!doctype html>
+<html ng-app="SkillsList">
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="ui-bootstrap-tpls-0.12.1.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0-rc.0/angular-sanitize.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="abn_tree_directive.js"></script>
+    <script src="dragdrop/lvl-uuid.js"></script>
+    <script src="dragdrop/lvl-drag-drop.js"></script>
+	<script src="skillData.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="abn_tree.css">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body ng-controller="SkillMainDataController">
+<h1>Skill data</h1>
+
+<div class="row container center-block" id="root">
+<div class="col-md-2">
+	<div lvl-draggable='true' ng-repeat="(skill,data) in rawSkillData" data-skill="{{skill}}">{{skill}}</div>
+</div>
+
+<div class="col-md-5" ng-controller="LoadoutController">
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 0)'><skill-full info="skills[0]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 1)'><skill-full info="skills[1]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 2)'><skill-full info="skills[2]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 3)'><skill-full info="skills[3]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 4)'><skill-full info="skills[4]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 5)'><skill-full info="skills[5]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 6)'><skill-full info="skills[6]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 7)'><skill-full info="skills[7]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 8)'><skill-full info="skills[8]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 9)'><skill-full info="skills[9]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 10)'><skill-full info="skills[10]"></skill-full></div>
+	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 11)'><skill-full info="skills[11]"></skill-full></div>
+</div>
+<div class="col-md-5 well">
+	<h3>Scratch</h3>
+    <p>Just testing designs</p>
+    <p>Colored damage types:</p>
+	<p><span class="label dmg-flame">Flame</span>
+	<span class="label dmg-ice">Ice</span>
+	<span class="label dmg-lightning">Lightning</span>
+	<span class="label dmg-poison">Poison</span>
+	<span class="label dmg-disease">Disease</span>
+	<span class="label dmg-physical">Physical</span>
+	<span class="label dmg-magic">Magic</span></p><br />
+    <p>Color buffs. Would make it show information on mouseover. Will probably style +/- and major/minor</p>
+    <p><span class="label" style="background-color:#CFC;color:#333">Empower</span>
+    <span class="label" style="background-color:#CFC;color:#333">Major Expedition</span>
+    <span class="label" style="background-color:#FCC;color:#333">Major Fracture</span></p>
+    
+    <p>What I'd like to go towards for skill info. Hovering over the info square would popup full text.
+    Might not be possible to automate extraction, though</p>
+    <div class="skill">
+    	<h2>Burning Breath <i class="fa fa-info-circle"></i></h2>
+        <div class="cost"><b>Base Cost:</b> 2226 <span class="stam">Stamina</span></div>
+        <div class="info"><b>Cast:</b> Instant</div>
+        <div class="info"><b>Radius:</b> 1000</div>
+        <div class="info"><b>Target:</b> Cone</div>
+        <p>
+        	<b>Instant:</b> <span class="label" style="background-color:#900">Flame Damage</span>
+            <br />
+        	<span class="coef">0.025794</span> &times; <span class="var stam">Stamina</span>
+                    + <span class="coef">0.26987</span> &times; <span class="var stam">Power</span>
+        </p>
+        <p>
+        	<b>Over 8 seconds:</b> <span class="label" style="background-color:#900">Flame Damage</span>
+            <span class="label" style="background-color:#FCC;color:#333">Major Fracture</span><br>
+        	<span class="coef">0.090580</span> &times; <span class="var stam">Stamina</span>
+                    + <span class="coef">0.95570</span> &times; <span class="var stam">Power</span>
+        </p>
+    </div>
+    
+    <p>Eventually, will be able to select skills into 3rd column for skill bar. Will probably have to make this more compact though.</p>
+    <p>Perhaps something like this for each bar</p>
+    <div class="skill">
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px;"></div>
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px;"></div>
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px;"></div>
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px;"></div>
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px;"></div>
+        <div style="width: 40px; height:40px; border: 1px solid black; display:inline-block; margin: 10px; margin-left:50px"></div>
+        <h3>Burning Breath</h3>
+        <span class="label dmg-flame">Flame Damage</span>
+            <br />
+        	<span class="coef">0.025794</span> &times; <span class="var stam">Stamina</span>
+            + <span class="coef">0.26987</span> &times; <span class="var stam">Power</span>
+        <br>
+        <span class="label" style="background-color:#900">Flame Damage</span>
+            <span class="label" style="background-color:#FCC;color:#333">Major Fracture</span><br>
+        	<span class="coef">0.090580</span> &times; <span class="var stam">Stamina</span>
+            + <span class="coef">0.95570</span> &times; <span class="var stam">Power</span>
+        
+        <h3>Degeneration</h3>
+        <span class="label dmg-magic">Magic Damage</span><span class="label" style="background-color:#CFC;color:#333">Major Sorcery</span>
+            <br />
+        	<span class="coef">0.025794</span> &times; <span class="var magk">Magicka</span>
+            + <span class="coef">0.26987</span> &times; <span class="var magk">Power</span>
+        <br>
+        <span class="label dmg-heal">Healing</span>
+            <br />
+        	<span class="coef">0.025794</span> &times; <span class="var magk">Magicka</span>
+            + <span class="coef">0.26987</span> &times; <span class="var magk">Power</span>
+    </div>
+</div>
+</div>
+<br />
+</body>
+</html>
