@@ -35,6 +35,15 @@
     </div>
 </div>
 <div class="col-md-5" ng-controller="LoadoutController" id="loadout">
+	<div class="row">
+	<label class="col-md-4">Health:</label>	<label class="col-md-4">Magicka:</label><label class="col-md-4">Stamina:</label>
+	</div><div class="row">
+	<input class="col-md-4" ng-model="health"/><input class="col-md-4" ng-model="magicka"/><input class="col-md-4" ng-model="stamina"/>
+	</div><div class="row">
+	<label class="col-md-4">Spell Power:</label><input class="col-md-2" ng-model="spellpower"/>
+	<label class="col-md-4">Weapon Dmg:</label><input class="col-md-2" ng-model="weaponpower"/>
+	</div>
+	<br />
     <div class="skill-list">
     	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 0)'><skill-full info="skills[0]"></skill-full></div>
     	<div x-lvl-drop-target='true' x-on-drop='dropped(dragEl, 1)'><skill-full info="skills[1]"></skill-full></div>
@@ -46,6 +55,14 @@
     </div>
 	<br /><br />
 	<hr>
+	<h3>Changelog</h3>
+	<ul>
+	<li>4/24 - Add value calculation for formulas</li>
+	<li>4/23 - Add drag &amp; drop to collect skills</li>
+	<li>4/23 - Add health info. NOTE: Only templar skills currently.</li>
+	<li>4/19 - Add skill tree for selection</li>
+	<li>4/18 - Initial release</li>
+	</ul>
 	<p><a href="demo.html">Samples of upcoming changes</a></p>
 </div>
 </div>

@@ -105,6 +105,30 @@ SkillData.controller('LoadoutController', ['$scope', function ($scope) {
 	$scope.defined = function(v) {
 		return v.name != ""
 	}
+	$scope.haveValues = true
+	$scope.magicka = 15000
+	$scope.stamina = 15000
+	$scope.health = 15000
+	$scope.spellpower = 1200
+	$scope.weaponpower = 1200
+	$scope.calc = function(fit, type) {
+		var main = 0
+		var power = 0
+		switch(type) {
+			case 'Magicka':
+				main = $scope.magicka
+				power = $scope.spellpower
+				break
+			case 'Stamina':
+				main = $scope.stamina
+				power = $scope.weaponpower
+				break
+			case 'Ultimate':
+				main = Max($scope.magicka, $scope.stamina)
+				power = Max($scope.spellpower, $scope.weaponpower)
+		}
+		return Math.round(main*fit.mainCoef + power*fit.powerCoef + $scope.health*fit.healthCoef + fit.intercept)
+	}
 }]);
 SkillData.filter('fitQualityClass', function() {
   return function(input) {
@@ -178,11 +202,12 @@ SkillData.directive('skillFull', function() {
 	return {
 		restrict: 'E',
 		scope: {
-			skill: '=info'
+			skill: '=info',
 		},
 		templateUrl: 'skill-template.html',
-		link: function(scope) {
+		link: function(scope, element, attrs) {
 			scope.description = scope.skill.description
+			scope.calc = scope.$parent.calc
 		}
 	}
 });

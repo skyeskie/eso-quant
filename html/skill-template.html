@@ -15,6 +15,7 @@
 	<div class="formula" ng-repeat="(id,fit) in skill.fit">
 		<span class="formulaID">{{id}}</span>
 		<span class="rsq label {{fit.rsq|fitQualityClass}}">R<sup>2</sup>: {{fit.rsq|number:4}}</span>
+		<span ng-show="calc" class="calcResult">{{calc(fit, skill.mechanic)}}</span>
 		<div class="eqn">
 			= <formula-part value="{{fit.mainCoef|number:4}}" label="MainStat"></formula-part>
 			<formula-part value="{{fit.healthCoef|number:4}}" label="Health"></formula-part>

@@ -117,3 +117,14 @@ div.paginateContain .pagination { margin: 0px auto; }
 #loadout .skill .info {
 	display: none;
 }
+
+.calcResult {
+	display: inline-block;
+	margin: 0px 15px;
+	width: 50px;
+	text-align: center;
+	font-weight: bold;
+	background-color: #FFE;
+	border: 1px solid #ABC;
+	border-radius: 6px;
+}
