@@ -3,8 +3,25 @@ body {
 	height: 100%;
 }
 
-h1 {
-	text-align: center;
+#pageHead {
+	width: 100%;
+	margin: 0px 0px 2em 0px;
+	padding: 1em;
+	background-color:#000;
+	color: #EEE;
+}
+
+#pageHead h1 {
+	margin: 0px;
+}
+
+#pageHead p {
+	margin-left: 40px
+}
+
+#pageHead img {
+	height: 75px;
+	width: auto;
 }
 
 .skill {
