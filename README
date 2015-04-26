@@ -6,27 +6,26 @@ afterwords.
 This is not an easy setup. I've made it as easy as possible, but there are a lot of moving parts.
 Furthermore, you still have to do a lot of the work afterwords.
 
-This addon can use a lot of lua memory to export data. Consider disabling other addons when running.
-As well, you'll want to delete/move the saved variables for this when you're done.
+This addon can use a lot of lua memory to export data, depending on how many items you use.
+Consider disabling other addons when running. As well, you'll want to delete/move the saved
+variables for this when you're done.
 
-Also, your game may appear to freeze while doing some of the commands. This is normal.
+Your game may appear to freeze while doing some of the commands. This is normal.
 A lot of the commands involve a lot of processing, and it's not really a priority to make the
 game run smoothly during them.
 
-Health data is not recorded yet. This will make some of the skill formulas wildly inaccurate.
-Pay close attention to the R squared value.
+Checking the set data will bind unbound gear in your bags.
 
 # Installation
-1) Install the addon in-game
-  a) Install Wykkyd's Outfitter (required for some modules)
-  b) Put into addon folder for game
-
-2) Install R (http://www.r-project.org/)
-  a) Install Rserve. Within the R cli, type the following command:
+1. Install the addon in-game (place in folder).
+   Note: You can place all the files in the addon directory just fine.
+2. Install Wykkyd's Outfitter (required for skill curve module)
+3. Install R (http://www.r-project.org/)
+4. Install Rserve. Within the R cli, type the following command:
     `install.packages("Rserve")`
 NOTE: Stand-alone Rserve can be used if desired for most functionality
 
-3) Install Scilua / LuaJIT
+5. Install Scilua + LuaJIT
   a) Follow the directions on http://www.scilua.org/get.html
   b) Make sure to get the main Xsys library and the Rclient library.
 
@@ -40,9 +39,24 @@ Type `/quant` in the chat box to see a list of commands and a brief description.
 * Champion system -- (`cs` and `cs-desc`) dumping champion system per-point data and descriptions
 * Stats dump -- Exports character current character stats
 * Skill dump -- Exports description and details about skills
-* Skill curve -- Iterates through gear to record skill tooltip numbers at different stats*
+* Skill curve -- See below. Requires extensive setup
 * Sets dump -- Exports a dump of all set info
 * Power register -- crude dumping of stamina/magicka changes to chatbox
+
+### Skill Curve module
+This module iterates through gear combinations recording tooltip data. It's decently automated, but
+does require some setup. This is best done on PTS.
+
+1. Use a base VR14 character (no attributes, skill points, or champion points).
+2. Prepare gear sets: health, magicka, and stamina enchants. Try to keep set bonuses neutral.
+3. Prepare 6-12 bows of different power (Level 1 to VR14 gold).
+4. Have all gear sets and bows in inventory. Don't put anything else in inventory.
+If you have unbound gear items, this command WILL bind them to your character.
+Alt+F4 or /reloadui to stop this running
+5. Run /quant itr-all-skills
+6. Wait 3-6 minutes. It takes awhile
+7. Reload UI or logout to make sure data is saved.
+8. Repeat for other classes. Can just do /quant skills for this
 
 ## External Lua
 
@@ -56,26 +70,35 @@ To access, run the `runScripts.lua` file in the base directory. Files will be ou
 There's a brief summary, buts see the individual scripts for more details.
 
 ## HTML
-I've started working on some HTML for displaying. After exporting the data to JSON, move the JSON into the
+Under the HTML directory, there's HTML for displaying. After exporting the data to JSON, move the JSON into the
 same folder as the HTML. You can then open the HTML in Firefox. 
 
 Note: Unless you actually host it on a site (or some complicated workarounds), Chrome will not load local
 files.
 
+This is currently hosted on http://skills.mhguild.com/
+
 -----------------------------------------------------
 # Cleanup
-Delete `Quant.lua` from your SavedVariables directory when you are done with it
+Delete `Quant.lua` from your SavedVariables directory when you are done with it.
+Also feel free to contact me if you want to include a module.
 
-# Extension
+# Extending Quant
+This is fairly modular so can be easily extended. You can use/extend however (under the GPL).
+
 In-game
 * See `modules/Template.lua` for a documented example of the framework.
 * After adding a module, include its path in `Quant.txt` at the end.
 
-External
-* There are several convenience functions in `scripts/inc` to help out
+External Lua
+* There are several convenience functions under `scripts/inc` to help out
 * Consider adding to the `runScript.lua` to make it easier to access
 
+HTML
+* It should be straightforward. Data is primarily output as JSON here.
+
 # Changelog
+0.5 - Add HTML to initial release. Cleanup modules
 0.4 - Add sets, initialize Git
 0.3 - Begin limited release to Mostly Harmless and Wagonborn
 0.2 - Personal use (Skill iteration)

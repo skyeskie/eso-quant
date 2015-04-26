@@ -171,7 +171,7 @@ function skpwr:addWeaponIterations()
     end
 end
 
-Quant:registerCmd("itr-all-skills", "Generate damage data for all active skills", function()
+Quant:registerCmd("itr-all-skills", "|cFF0000WARNING. See README for instructions", function()
     d("Beginning skill iteration. This may take awhile.")
     skpwr.filter = {
         SKILL_TYPE_TRADESKILL = 0,
@@ -182,7 +182,7 @@ Quant:registerCmd("itr-all-skills", "Generate damage data for all active skills"
     skpwr:prepScan()
 end)
 
-Quant:registerCmd("itr-class-skills", "Generate damage data for class skills only", function()
+Quant:registerCmd("itr-class-skills", "|cFF0000WARNING. See README for instructions", function()
     d("Beginning class skill iteration. This may take awhile.")
     skpwr.filter = {
         SKILL_TYPE_TRADESKILL = 0,
@@ -200,7 +200,7 @@ Quant:registerCmd("itr-class-skills", "Generate damage data for class skills onl
 end)
 
 --Try to execute all skills
-Quant:registerCmd("skills", "Dump class skills and iterate gear", function()
+Quant:registerCmd("skills", "|cFF0000WARNING. See README for instructions", function()
     Quant:cli('itr-class-skills')
     Quant:cli('skill-full') --Just do these on naked char for standard
 end)

@@ -18,19 +18,21 @@
 --- Used to extract SavedVariables
 --- Required: /quant itr-all-skills or /quant itr-class-skills and /quant skill-full in-game
 --- Required: Rserve must be running for this script
---- Edit the following to your account name to use:
-local account = "@Sasky"
---- Edit server to which saved variables: "live", "liveeu", "pts"
-local server = "pts"
----
 
-require("inc.util")
-local sv = require("inc.loadfile")
-sv.loadSavedVariables(account, server)
-require("inc.extract")
+print("Loading libraries")
+local cfg = cfg or assert(loadfile("cfg.lua"))()
+local u = inc("util")
+local sv = inc("loadfile")
+local r = inc("extract")
 
-local skilldata = sv.getSVEntry("SkillsCurve")
-local skillfull = sv.getSVEntry("SkillsFullInfo")
+print("Account: " .. cfg.account)
+print("Server: " .. cfg.server)
+
+print("Loading saved variables")
+sv:loadSavedVariables(cfg.account, cfg.server)
+local skilldata = sv:getSVEntry("SkillsCurve")
+local skillfull = sv:getSVEntry("SkillsFullInfo")
+local skillref = r:initSkillData(sv)
 
 --Header
 local header = {
@@ -62,22 +64,22 @@ for skill_lvl,numbers in pairs(skilldata) do
 
     local row = {
         skill,
-        nn(ref.type),
-        nn(ref.line),
+        u.nn(ref.type),
+        u.nn(ref.line),
         4, --Hardcoding rank 4, though possible want different ranks later
-        nn(data.description),
-        nn(data.descriptionHeader),
-        getMechanicName(data.mechanic),
-        nn(data.cost),
-        nn(data.targetDescription),
-        nn(data.minRangeCM),
-        nn(data.maxRangeCM),
-        nn(data.radiusCM),
-        nn(data.distanceCM),
-        bl(data.channeled),
-        nn(data.castTime),
-        nn(data.channelTime),
-        nn(data.durationMS)
+        u.nn(data.description),
+        u.nn(data.descriptionHeader),
+        u.getMechanicName(data.mechanic),
+        u.nn(data.cost),
+        u.nn(data.targetDescription),
+        u.nn(data.minRangeCM),
+        u.nn(data.maxRangeCM),
+        u.nn(data.radiusCM),
+        u.nn(data.distanceCM),
+        u.bl(data.channeled),
+        u.nn(data.castTime),
+        u.nn(data.channelTime),
+        u.nn(data.durationMS)
     }
 
     local DESCR = 5
@@ -86,7 +88,7 @@ for skill_lvl,numbers in pairs(skilldata) do
     local formulaNum = 1
     local formulae = {}
     for _,rawnumbers in ipairs(numbers) do
-        local fit = getFitData(rawnumbers)
+        local fit = r:getFitData(rawnumbers)
         local delta = 1E-5
         if fit.main < delta then fit.main = 0 end
         if fit.power < delta then fit.power = 0 end
@@ -99,7 +101,7 @@ for skill_lvl,numbers in pairs(skilldata) do
 
         local formulasig = fit.main .. "/" .. fit.power .. "/" .. fit.int .. "/" .. fit.rsq
         if fit.const then
-            row[DESCR] = replaceOne(desc, toReplace, fit.int)
+            row[DESCR] = r:replaceNumberInDescription(desc, toReplace, fit.int)
         else
             if not formulae[formulasig] then
                 table.insert(row,fit.main)
@@ -110,7 +112,7 @@ for skill_lvl,numbers in pairs(skilldata) do
                 formulae[formulasig] = "##f" .. formulaNum .. "##"
                 formulaNum = formulaNum + 1
             end
-            row[DESCR] = replaceNumberInDescription(desc, toReplace, formulae[formulasig])
+            row[DESCR] = r:replaceNumberInDescription(desc, toReplace, formulae[formulasig])
         end
     end
 

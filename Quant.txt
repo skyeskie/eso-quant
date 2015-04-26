@@ -1,5 +1,5 @@
 ## Title: Quant
-## Version: 0.4
+## Version: 0.5
 ## Author: Sasky
 ## APIVersion: 100011
 ## SavedVariables: QuantData

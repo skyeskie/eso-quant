@@ -11,7 +11,7 @@ local scripts = {
     { file = "scripts/DumpForR.lua", desc = "Single Skill Info -> for R" },
     { file = "scripts/dumpSkillDataJson.lua", desc = "Skill Fit -> JSON" },
     { file = "scripts/skillDataExtract.lua", desc = "Skill Fit -> DAT (tab-separated)"  },
-    { file = "scripts/SkillFormulaDump.lua", desc = "Skill Formulas only -> CSV" },
+    { file = "scripts/SkillFormulaDump.lua", desc = "Skill Formulas only -> CSV. Requires DAT skill fit run first" },
     { file = "scripts/skillNamesByLine.lua", desc = "Skill Names -> console" },
 }
 
