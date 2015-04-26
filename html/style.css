@@ -128,3 +128,8 @@ div.paginateContain .pagination { margin: 0px auto; }
 	border: 1px solid #ABC;
 	border-radius: 6px;
 }
+
+.vpscroll {
+	height: 80vh;
+	overflow: auto;
+}
