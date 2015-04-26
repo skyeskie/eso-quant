@@ -124,8 +124,8 @@ SkillData.controller('LoadoutController', ['$scope', function ($scope) {
 				power = $scope.weaponpower
 				break
 			case 'Ultimate':
-				main = Max($scope.magicka, $scope.stamina)
-				power = Max($scope.spellpower, $scope.weaponpower)
+				main = Math.max($scope.magicka, $scope.stamina)
+				power = Math.max($scope.spellpower, $scope.weaponpower)
 		}
 		return Math.round(main*fit.mainCoef + power*fit.powerCoef + $scope.health*fit.healthCoef + fit.intercept)
 	}
