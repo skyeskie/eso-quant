@@ -65,6 +65,18 @@ function skpwr:iterationExecuter()
         self:recordIteration()
         EVENT_MANAGER:UnregisterForUpdate("QuantSkillCurve")
         self:finishScan()
+    elseif(item.reset) then
+        if(iterationQueue.resetting == 0) then
+            d("Resetting for next gear set...")
+            WYK_Outfitter.GC.StripNaked()
+            iterationQueue.resetting = 1
+        elseif(iterationQueue.resetting >= 5) then
+            d("Reset finished")
+            iterationQueue.i = i + 1
+            iterationQueue.resetting = 0
+        else
+            iterationQueue.resetting = iterationQueue.resetting + 1
+        end
     else
         local bag,pos = WYK_Outfitter.GC.FindItem(item.id)
         EquipItem(bag,pos,item.eslot)
@@ -98,24 +110,52 @@ end
 function skpwr:initScan()
     --Iterate bags to find weapons (bows)
     self.weapons = {}
+    self.gearSets = {
+        ["Maximum Magicka Enchantment"] = {},
+        ["Maximum Stamina Enchantment"] = {},
+        ["Maximum Health Enchantment"] = {},
+    }
+
+    --Scan backpack for items to equip
     local slots = GetBagSize(BAG_BACKPACK)
     for slot = 0, slots, 1 do
         local uid = GetItemUniqueId( BAG_BACKPACK, slot )
-        if uid ~= nil and GetItemFilterTypeInfo(BAG_BACKPACK,slot) == ITEMFILTERTYPE_WEAPONS then
-            local name = GetItemName(BAG_BACKPACK,slot)
-            if string.find(name, "bow") then
+        if uid ~= nil then
+            local type = GetItemType(BAG_BACKPACK, slot)
+            if(type == ITEMTYPE_WEAPON) then
+            if(GetItemWeaponType(BAG_BACKPACK, slot) == WEAPONTYPE_BOW) then
                 table.insert(self.weapons, uid)
+            end
+            elseif(type == ITEMTYPE_ARMOR) then
+                local link = GetItemLink(BAG_BACKPACK, slot)
+                local ench, eType = GetItemLinkEnchantInfo(link)
+                if(ench and self.gearSets[eType]) then
+                    table.insert(self.gearSets[eType], {
+                        eslot=GetComparisonEquipSlotsFromItemLink(link),
+                        id=uid
+                    })
+                end
             end
         end
     end
 
-    self.progressCheck = #self.weapons + 1 --TODO: Change to #self.weapons
-    --Determine what to process
-    self:iterateGear()
+    --Build iteration queue
+    skpwr:addWeaponIterations()
+    for _,set in pairs(self.gearSets) do
+        for _,item in pairs(set) do
+            table.insert(iterationQueue, item)
+            skpwr:addWeaponIterations()
+        end
+        table.insert(iterationQueue, {reset=true})
+    end
+
+    --Prep iterator variables
+    self.progressCheck = #self.weapons +1
     iterationQueue.i = 1
+    iterationQueue.resetting = 0
+
     --Doesn't really go faster than 1s anyways. Let the game not choke as much
     EVENT_MANAGER:RegisterForUpdate("QuantSkillCurve", 1000, function()
-        self:recordIteration()
         self:iterationExecuter()
     end)
 end
@@ -123,16 +163,6 @@ end
 function skpwr:finishScan()
     d("Finished scan. /reloadui to save out or inspect with /zgoo Quant.skpwr.data")
     self.itq = iterationQueue
-end
-
-function skpwr:iterateGear()
-    --Record gear moves for scan. Full weapon iteration in between
-    for k,v in pairs(self.gear) do
-        if v ~= -1 then
-            table.insert(iterationQueue, {eslot=k, id=v})
-            skpwr:addWeaponIterations()
-        end
-    end
 end
 
 function skpwr:addWeaponIterations()
@@ -171,6 +201,6 @@ end)
 
 --Try to execute all skills
 Quant:registerCmd("skills", "Dump class skills and iterate gear", function()
-    Quant:cli('skill-full')
     Quant:cli('itr-class-skills')
+    Quant:cli('skill-full') --Just do these on naked char for standard
 end)

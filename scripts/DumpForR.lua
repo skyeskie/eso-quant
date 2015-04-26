@@ -60,8 +60,15 @@ local dataset = selectKey(skillnums, "Select which numbers")
 
 local f = assert(io.open("rawnum.csv", "w"))
 local i = 1
-f:write("MainStat,Power,Damage\n")
+f:write("MainStat,Health,Power,Damage\n")
 for k,v in pairs(dataset) do
-    local _, primary, power = k:match("([MSU])([0-9.]+)P([0-9.]+)")
-    f:write(primary,",",power,",",v,"\n")
+    local _, primary, power, health = k:match("([MSU])([0-9.]+)P([0-9.]+)H?([0-9.]*)")
+    f:write(primary,",",health,",",power,",",v,"\n")
 end
+
+d("Sample R commands:")
+d("> data <- read.csv(\"rawnum.csv\")")
+d("> plot(data)")
+d("> summary(data)")
+d("> fit <- lm(data$Damage ~ data$MainStat + data$Power + data$Health)")
+d("> summary(fit)")
